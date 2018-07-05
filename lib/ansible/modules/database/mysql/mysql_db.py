@@ -135,7 +135,7 @@ def db_delete(cursor, db):
     return True
 
 
-def db_dump(module, host, user, password, db_name, target, all_databases, port, config_file, socket=None, ssl_cert=None, ssl_key=None, ssl_ca=None,
+def db_dump(module, host, user, password, db_name, target, all_databases, port, config_file, no_data=None, socket=None, ssl_cert=None, ssl_key=None, ssl_ca=None,
             single_transaction=None, quick=None, ignore_tables=None):
     cmd = module.get_bin_path('mysqldump', True)
     # If defined, mysqldump demands --defaults-extra-file be the first option
@@ -161,6 +161,8 @@ def db_dump(module, host, user, password, db_name, target, all_databases, port, 
         cmd += " %s" % pipes.quote(db_name)
     if single_transaction:
         cmd += " --single-transaction=true"
+    if no_data:
+        cmd += " --no-data=true"      
     if quick:
         cmd += " --quick"
     if ignore_tables:
@@ -271,6 +273,7 @@ def main():
             ssl_ca=dict(default=None, type='path'),
             connect_timeout=dict(default=30, type='int'),
             config_file=dict(default="~/.my.cnf", type='path'),
+            no_data=dict(default=False, type='bool'),
             single_transaction=dict(default=False, type='bool'),
             quick=dict(default=True, type='bool'),
             ignore_tables=dict(default=[], type='list')
