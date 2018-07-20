@@ -168,11 +168,7 @@ def db_dump(module, host, user, password, db_name, target, all_databases, port, 
     if single_transaction:
         cmd += " --single-transaction=true"
     if no_data:
-<<<<<<< HEAD
-        cmd += " --no-data=true"      
-=======
         cmd += " --no-data=true"
->>>>>>> 13ed4a5f68fccfd5c7f48ef5e3f39ae01f59e373
     if quick:
         cmd += " --quick"
     if ignore_tables:
