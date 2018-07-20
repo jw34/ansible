@@ -50,6 +50,12 @@ options:
     type: bool
     default: 'no'
     version_added: "2.1"
+  no_data:
+    description:
+      - Execute the dump as an empty schema (with no data)
+    type: bool
+    default: 'no'
+    version_added: "2.7"
   quick:
     description:
       - Option used for dumping large tables
@@ -135,8 +141,8 @@ def db_delete(cursor, db):
     return True
 
 
-def db_dump(module, host, user, password, db_name, target, all_databases, port, config_file, no_data=None, socket=None, ssl_cert=None, ssl_key=None, ssl_ca=None,
-            single_transaction=None, quick=None, ignore_tables=None):
+def db_dump(module, host, user, password, db_name, target, all_databases, port, config_file, no_data=None, socket=None,
+            ssl_cert=None, ssl_key=None, ssl_ca=None, single_transaction=None, quick=None, ignore_tables=None):
     cmd = module.get_bin_path('mysqldump', True)
     # If defined, mysqldump demands --defaults-extra-file be the first option
     if config_file:
@@ -162,7 +168,11 @@ def db_dump(module, host, user, password, db_name, target, all_databases, port, 
     if single_transaction:
         cmd += " --single-transaction=true"
     if no_data:
+<<<<<<< HEAD
         cmd += " --no-data=true"      
+=======
+        cmd += " --no-data=true"
+>>>>>>> 13ed4a5f68fccfd5c7f48ef5e3f39ae01f59e373
     if quick:
         cmd += " --quick"
     if ignore_tables:
@@ -298,6 +308,7 @@ def main():
     ssl_ca = module.params["ssl_ca"]
     connect_timeout = module.params['connect_timeout']
     config_file = module.params['config_file']
+    no_data = module.params["no_data"]
     login_password = module.params["login_password"]
     login_user = module.params["login_user"]
     login_host = module.params["login_host"]
@@ -305,6 +316,7 @@ def main():
     for a_table in ignore_tables:
         if a_table == "":
             module.fail_json(msg="Name of ignored table cannot be empty")
+    no_data = module.params["no_data"]
     single_transaction = module.params["single_transaction"]
     quick = module.params["quick"]
 
@@ -349,7 +361,7 @@ def main():
             else:
                 rc, stdout, stderr = db_dump(module, login_host, login_user,
                                              login_password, db, target, all_databases,
-                                             login_port, config_file, socket, ssl_cert, ssl_key,
+                                             login_port, config_file, no_data, socket, ssl_cert, ssl_key,
                                              ssl_ca, single_transaction, quick, ignore_tables)
                 if rc != 0:
                     module.fail_json(msg="%s" % stderr)
